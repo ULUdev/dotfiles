@@ -1,0 +1,25 @@
+env:
+  TERM: xterm-256color
+font:
+  size: 12
+  spacing:
+    line: 0
+    letter: 0
+  glyph_offset:
+    x: 0
+    y: 0
+  normal:
+    family: mononoki Nerd Font
+
+background_opacity: 0.83
+
+colors:
+  primary:
+    background: '#282828'
+
+window:
+  padding:
+    x: 10
+    y: 10
+
+# vim: ts=2 sts=2 sw=2 expandtab

@@ -1,1 +1,0 @@
-/home/moritz/.vim/colors/raven.vim
