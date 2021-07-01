@@ -22,31 +22,34 @@ set autoindent
 set smartindent
 set tabstop=4 softtabstop=4 noexpandtab shiftwidth=4 " set tabwidth to 4
 
-set incsearch " show all results
-set hlsearch " highlight search always
+set incsearch " highlight as searching
+set hlsearch " highlight all searches
 
 " Searching for files
 set path+=**
 set wildmenu
 set wildignore=.gitignore,.git,tags,node_modules,target " you dont want to search certain directories and files with wildmenu
 
-set completeopt=menuone,noinsert " one completion menu and no inserting per default
+set completeopt=menuone,noinsert,preview " one completion menu and no inserting per default
 set laststatus=2 " always show statusline
 set cursorline " needed for raven colorscheme
 set autoread " if a file has been changed outside of vim read it automatically
 set shell=zsh " set the default terminal shell to zsh (bash duplicates the prompt for some reason)
+" set tags+=~/.vim/systags " add the systags file for autocompletion
+
+" rust
+let g:rustc_path = '/usr/bin/rustc'
 " }}}
 
-silent! so .vimlocal " local configuration for a project
+set exrc " local project config (see :h 'exrc')
 
 " netrw {{{
 let g:netrw_banner=0 " no banner
 let g:netrw_liststyle=3 " tree view
-let g:netrw_winsize = 30 " set the window size to 30
+let g:netrw_winsize = 20 " set the window size to 20
 let g:netrw_list_hide = netrw_gitignore#Hide() .',^node_modules$,^\.git/$,^__pycache__/$' " hide node modules and .git in the netrw list
 let g:netrw_special_syntax = 1 " highlight some files/folders 
 " }}}
-
 " leader {{{
 let mapleader=' ' " set the leader key to SPACE
 
@@ -79,18 +82,25 @@ nnoremap <leader>sp [s
 nnoremap <leader>sc z=
 
 " }}}
-
 " Completion: {{{
 augroup Completion
-	autocmd FileType python setlocal omnifunc=python3complete#Complete
-	autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-	autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-	autocmd FileType html,xhtml setlocal ofu=htmlcomplete#CompleteTags
+	autocmd FileType python setl ofu=python3complete#Complete
+	autocmd FileType javascript setl ofu=javascriptcomplete#CompleteJS
+	autocmd FileType css setl ofu=csscomplete#CompleteCSS
+	autocmd FileType html,xhtml setl ofu=htmlcomplete#CompleteTags
+	autocmd FileType c setl ofu=ccomplete#Complete
+augroup END
+" }}}
+" Code Style Guides: {{{
+augroup Styles
+	autocmd FileType python setl ts=4 sts=4 sw=4 et
+	autocmd FileType rust setl ts=4 sts=4 sw=4 et
 augroup END
 " }}}
 
-" Make tags for the current project (requires ctags)
-command! MakeTags call system("ctags -R $(ls | grep -vi -e '^node_modules$' -e '^\.git$' -e '^target$')")
+
+" Make tags for the current project but only files that are tracked by git (requires ctags)
+command! MakeTags call system("ctags $(git ls-files)")
 
 " plugins {{{
 " snippets
@@ -102,6 +112,9 @@ let g:snippets = {
 	\'c-file': readfile(expand('~/.vim/snippets/c-file.txt')),
 	\'c-header': readfile(expand('~/.vim/snippets/c-header.txt'))
 \}
+
+" statusline
+let g:ravenline_powerline = 1 " enable powerline symbols
 
 " Plugins
 source ~/Code/vim/plugin-manager/plugin-manager.vim " load the plugin manager
